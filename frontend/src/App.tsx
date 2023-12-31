@@ -1,6 +1,15 @@
+import GlobalStyle from "src/GlobalStyle"
+import Router from "src/components/atoms/Router"
+import ThemeContext from "src/contexts/ThemeContext"
+
 function App() {
   return (
-    <h1>React Application</h1>
+    <>
+      <ThemeContext>
+        <GlobalStyle />
+        <Router />
+      </ThemeContext>
+    </>
   )
 }
 
