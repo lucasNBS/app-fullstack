@@ -6,7 +6,6 @@ export default function Router() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/teste" element={<Home />} />
       </Routes>
     </BrowserRouter>
   )

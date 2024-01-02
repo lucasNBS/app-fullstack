@@ -1,4 +1,6 @@
 import express, { Request, Response } from "express"
+// import fs from "fs"
+// import { Buffer } from "buffer"
 import bookModel from "../models/bookModel"
 
 // Initialize route
@@ -13,6 +15,10 @@ router.get("/all", async (req: Request, res: Response) => {
 // Create book
 router.post("/create", async (req: Request, res: Response) => {
   const { title, description, coverImage, publishedDate, author } = req.body
+
+  // console.log(req.body)
+  // const base64 = fs.readFileSync(coverImage, "base64")
+  // const buffer = Buffer.from(base64, "base64")
 
   const book = new bookModel({
     title,
