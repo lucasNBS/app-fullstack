@@ -7,7 +7,7 @@ const BookSchema = new mongoose.Schema({
     required: true
   },
   coverImage: {
-    type: Buffer,
+    type: String,
     required: true
   },
   description: {

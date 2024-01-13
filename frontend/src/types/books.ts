@@ -1,10 +1,7 @@
 export type booksList = {
   id: string
   title: string
-  coverImage: {
-    type: "Buffer",
-    data: number[]
-  }
+  coverImage: string
   description: string
   publishedDate: string
   author: string

@@ -1,10 +1,12 @@
 import express, { Request, Response } from "express"
-// import fs from "fs"
-// import { Buffer } from "buffer"
 import bookModel from "../models/bookModel"
+import multer from "multer"
+import path from "path"
+import fs from "fs"
 
 // Initialize route
 const router = express.Router()
+const upload = multer({ dest: "uploads/" })
 
 // Get all books
 router.get("/all", async (req: Request, res: Response) => {
@@ -13,12 +15,18 @@ router.get("/all", async (req: Request, res: Response) => {
 })
 
 // Create book
-router.post("/create", async (req: Request, res: Response) => {
-  const { title, description, coverImage, publishedDate, author } = req.body
+router.post("/create", upload.single("coverImage"), async (req: Request, res: Response) => {
+  const { title, description, publishedDate, author } = req.body
+  const coverImage = req.file?.originalname
 
-  // console.log(req.body)
-  // const base64 = fs.readFileSync(coverImage, "base64")
-  // const buffer = Buffer.from(base64, "base64")
+  const tempPath = req.file?.path
+  const targetPath = path.join(__dirname, `../../uploads/${coverImage}`)
+
+  if (tempPath) {
+    fs.rename(tempPath, targetPath, (err) => {
+      if (err) return res.status(500)
+    })
+  }
 
   const book = new bookModel({
     title,

@@ -16,6 +16,7 @@ export default function Home() {
 
 const Container = styled.section`
   max-width: 1200px;
+  min-height: calc(100vh - 285px - 4rem);
   margin: 2rem auto;
   display: flex;
   justify-content: flex-start;

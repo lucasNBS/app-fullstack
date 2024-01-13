@@ -1,4 +1,4 @@
-import { ReactNode, useLayoutEffect, useState } from "react"
+import { ReactNode, useState } from "react"
 import { ThemeProvider } from "styled-components"
 
 type ThemeType = {

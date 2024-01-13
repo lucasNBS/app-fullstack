@@ -10,10 +10,9 @@ export default function GalleryCard({
   description,
   slug
 }: GalleryCardProps) {
-
   return (
     <Container href={`/book/${slug}`}>
-      <img src="/" alt="Book cover image" width="100%" height="100%" />
+      <img src={`http://localhost:8000/${coverImage}`} alt="Book cover image" width="100%" height="100%" />
       <Content>
         <Title>{title}</Title>
         <Description>{description}</Description>

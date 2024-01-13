@@ -8,7 +8,7 @@ export default function Navbar() {
           <Link href="/">Home</Link>
         </ListItem>
         <ListItem>
-          <Link href="/">New Book</Link>
+          <Link href="/new-book">New Book</Link>
         </ListItem>
         <ListItem>
           <Link href="/">My Books</Link>
