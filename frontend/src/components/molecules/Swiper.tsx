@@ -13,7 +13,7 @@ export default function Swiper({ itemsList, title }: SwiperProps) {
       <SwiperContent>
         {itemsList.map((item, index) => {
           return (
-            <SwiperItem />
+            <SwiperItem key={item} />
           )
         })}
       </SwiperContent>

@@ -1,5 +1,4 @@
-export type booksList = {
-  id: string
+export type book = {
   title: string
   coverImage: string
   description: string

@@ -19,6 +19,9 @@ router.post("/create", upload.single("coverImage"), async (req: Request, res: Re
   const { title, description, publishedDate, author } = req.body
   const coverImage = req.file?.originalname
 
+  const imageURL = `http://localhost:8000/${req.file?.originalname}`
+  const formatedDate = publishedDate.replaceAll("-", "/")
+
   const tempPath = req.file?.path
   const targetPath = path.join(__dirname, `../../uploads/${coverImage}`)
 
@@ -31,8 +34,8 @@ router.post("/create", upload.single("coverImage"), async (req: Request, res: Re
   const book = new bookModel({
     title,
     description,
-    coverImage,
-    publishedDate,
+    coverImage: imageURL,
+    publishedDate: formatedDate,
     author
   })
 

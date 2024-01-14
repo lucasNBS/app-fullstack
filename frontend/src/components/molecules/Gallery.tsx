@@ -1,10 +1,10 @@
 import styled from "styled-components"
 import GalleryCard from "../atoms/GalleryCard"
 import { useEffect, useState } from "react"
-import { booksList } from "src/types/books"
+import { book } from "src/types/books"
 
 export default function Gallery() {
-  const [list, setList] = useState<booksList[]>([])
+  const [list, setList] = useState<book[]>([])
 
   useEffect(() => {
     const getData = async () => {
@@ -19,7 +19,7 @@ export default function Gallery() {
     <Container>
       {list.map((item) => {
         return (
-          <GalleryCard key={item.id} {...item} />
+          <GalleryCard key={item.slug} {...item} />
         )
       })}
     </Container>
@@ -30,5 +30,5 @@ const Container = styled.div`
   width: 100%;
   display: grid;
   grid-gap: 1.25rem;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(5, 1fr);
 `

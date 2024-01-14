@@ -1,7 +1,7 @@
-import { booksList } from "src/types/books"
+import { book } from "src/types/books"
 import styled from "styled-components"
 
-type GalleryCardProps = Omit<booksList, "id" | "likedBy" | "publishedDate">
+type GalleryCardProps = Omit<book, "id" | "likedBy" | "publishedDate">
 
 export default function GalleryCard({
   title,
@@ -12,7 +12,7 @@ export default function GalleryCard({
 }: GalleryCardProps) {
   return (
     <Container href={`/book/${slug}`}>
-      <img src={`http://localhost:8000/${coverImage}`} alt="Book cover image" width="100%" height="100%" />
+      <img src={coverImage} alt="Book cover image" width="100%" height="100%" />
       <Content>
         <Title>{title}</Title>
         <Description>{description}</Description>
