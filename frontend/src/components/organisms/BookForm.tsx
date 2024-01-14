@@ -3,13 +3,34 @@ import addImage from "/icons/addImage.svg"
 import { useForm } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
 import * as Yup from "yup"
+import Button from "../atoms/Button"
+import { book } from "src/types/books"
+import { useEffect } from "react"
+import { useParams } from "react-router-dom"
 
 const BookFormSchema = Yup.object().shape({
-  title: Yup.string().required("Preencha o campo").min(3, "Título muito curto").max(60, "Título muito longo"),
-  description: Yup.string().required("Preencha o campo").min(3, "Descrição muito curta").max(200, "Descrição muito longa"),
-  author: Yup.string().required("Preencha o campo").min(3, "Nome de autor muito curto").max(50, "Nome de autor muito longo"),
-  publishedDate: Yup.date().typeError("Data inválida").required("Preencha o campo").max(new Date(), "Não é possível incluir uma data futura"),
-  coverImage: Yup.mixed().test("has file", "Selecione uma imagem para a capa", (val: any) => val.length > 0),
+  title: Yup
+    .string()
+    .required("Preencha o campo")
+    .min(3, "Título muito curto")
+    .max(60, "Título muito longo"),
+  description: Yup
+    .string()
+    .required("Preencha o campo")
+    .min(3, "Descrição muito curta").max(200, "Descrição muito longa"),
+  author: Yup
+    .string()
+    .required("Preencha o campo")
+    .min(3, "Nome de autor muito curto")
+    .max(50, "Nome de autor muito longo"),
+  publishedDate: Yup
+    .date()
+    .typeError("Data inválida")
+    .required("Preencha o campo")
+    .max(new Date(), "Não é possível incluir uma data futura"),
+  coverImage: Yup
+    .mixed()
+    .test("has file", "Selecione uma imagem para a capa", (val: any) => val.length > 0),
 })
 
 function handleChangeImage(image: File) {
@@ -26,26 +47,39 @@ function handleChangeImage(image: File) {
   reader.readAsDataURL(image)
 }
 
-export default function BookForm() {
+type BookFormProps = {
+  submit: () => void
+  editPage?: boolean
+}
+
+export default function BookForm({ submit, editPage }: BookFormProps) {
+  const { slug } = useParams()
   const {
     register,
     handleSubmit,
-    watch,
+    setValue,
     getValues,
     formState: { errors }
   } = useForm({
     resolver: yupResolver(BookFormSchema)
   })
 
-  async function submit() {
-    const form = document.getElementById("form") as HTMLFormElement
-    const newData = new FormData(form)
+  useEffect(() => {
+    if (editPage) {
+      const getData = async () => {
+        const book: book = await fetch(`http://localhost:8000/book/${slug}`).then(res => res.json())
 
-    await fetch("http://localhost:8000/book/create", {
-      method: "POST",
-      body: newData,
-    })
-  }
+        const values = getValues()
+
+        let i: "title" | "description" | "author" | "publishedDate" | "coverImage"
+        for (i in values) {
+          setValue(i, book[i])
+        }
+      }
+
+      getData()
+    }
+  }, [])
 
   return (
     <FormContainer id="form" encType="multipart/form-data" method="post" onSubmit={handleSubmit(submit)}>
@@ -53,24 +87,29 @@ export default function BookForm() {
         <FormGroup>
           <FormLabel>Título</FormLabel>
           <FormInput {...register("title")} type="text" />
-          {errors.title?.message && <ErrorMessage>{errors.title?.message}</ErrorMessage>}
+          {errors.title?.message && <ErrorMessage>{errors.title?.message as string}</ErrorMessage>}
         </FormGroup>
         <FormGroup>
           <FormLabel>Data de Publicação</FormLabel>
           <FormInput {...register("publishedDate")} type="date" />
-          {errors.publishedDate?.message && <ErrorMessage>{errors.publishedDate?.message}</ErrorMessage>}
+          {errors.publishedDate?.message && <ErrorMessage>{errors.publishedDate?.message as string}</ErrorMessage>}
         </FormGroup>
         <FormGroup>
           <FormLabel>Autor</FormLabel>
           <FormInput {...register("author")} type="text" />
-          {errors.author?.message && <ErrorMessage>{errors.author?.message}</ErrorMessage>}
+          {errors.author?.message && <ErrorMessage>{errors.author?.message as string}</ErrorMessage>}
         </FormGroup>
         <FormGroup>
           <FormLabel>Descrição</FormLabel>
           <FormTextarea {...register("description")} />
-          {errors.description?.message && <ErrorMessage>{errors.description?.message}</ErrorMessage>}
+          {errors.description?.message && <ErrorMessage>{errors.description?.message as string}</ErrorMessage>}
         </FormGroup>
-        <FormButton type="submit">Enviar</FormButton>
+        <Button
+          value="Enviar"
+          background="green"
+          color="#fff"
+          padding="0.5rem 1rem"
+        />
       </Container>
       <Container width="40">
         <FormGroup>
@@ -84,7 +123,7 @@ export default function BookForm() {
             />
             <Image id="image-cover" src={addImage} alt="Capa do livro" />
           </ImageContainer>
-          {errors.coverImage?.message && <ErrorMessage>{errors.coverImage?.message}</ErrorMessage>}
+          {errors.coverImage?.message && <ErrorMessage>{errors.coverImage?.message as string}</ErrorMessage>}
         </FormGroup>
       </Container>
     </FormContainer>
@@ -145,13 +184,6 @@ const FormTextarea = styled.textarea`
   border-radius: 2px;
   border: 1px solid #687075;
   resize: none
-`
-
-const FormButton = styled.button`
-  cursor: pointer;
-  background-color: green;
-  color: #fff;
-  padding: 0.5rem 1rem;
 `
 
 const Image = styled.img`

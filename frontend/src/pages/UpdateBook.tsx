@@ -1,21 +1,25 @@
-import styled from "styled-components"
+import { useParams } from "react-router-dom"
 import BookForm from "src/components/organisms/BookForm"
+import styled from "styled-components"
 
-export default function CreateBook() {
+export default function UpdateBook() {
+  const { slug } = useParams()
 
   async function submit() {
     const form = document.getElementById("form") as HTMLFormElement
     const newData = new FormData(form)
 
-    await fetch("http://localhost:8000/book/create", {
-      method: "POST",
+    console.log(...newData)
+
+    await fetch(`http://localhost:8000/book/edit/${slug}`, {
+      method: "PUT",
       body: newData,
     })
   }
 
   return (
     <Container>
-      <BookForm submit={submit} />
+      <BookForm submit={submit} editPage />
     </Container>
   )
 }

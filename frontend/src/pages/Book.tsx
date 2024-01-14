@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react"
+import Button from "src/components/atoms/Button"
 import { book } from "src/types/books"
 import styled from "styled-components"
+import { useNavigate, useParams } from "react-router-dom"
 
 function formatDate(date: string) {
-  console.log(date)
   const index = date.indexOf("T")
   const newDateFormart = date.slice(0, index).split("-")
 
@@ -18,16 +19,29 @@ function formatDate(date: string) {
 
 export default function Book() {
   const [book, setBook] = useState<book>({} as book)
+  const { slug } = useParams()
+  const navigate = useNavigate()
 
   useEffect(() => {
     const getData = async () => {
-      const pathname = location.pathname
-      const book = await fetch(`http://localhost:8000${pathname}`).then(res => res.json())
+      const book = await fetch(`http://localhost:8000/book/${slug}`).then(res => res.json())
       setBook(book)
     }
 
     getData()
   }, [])
+
+  function handleDelete(slug: string) {
+
+    const answer = confirm("Você deseja excluir o livro?")
+
+    if (answer) {
+      fetch(`http://localhost:8000/book/delete/${slug}`, {
+        method: "DELETE",
+      })
+      navigate("/")
+    }
+  }
 
   return (
     <Container>
@@ -45,10 +59,32 @@ export default function Book() {
         <DivContainer width="60" justifyContent="space-between">
           <p>{book.description}</p>
           <ButtonsContainer>
-            <Button>Editar</Button>
-            <Button>Excluir</Button>
-            <Button>Curtir</Button>
-            <Button>Salvar</Button>
+            <Button
+              value="Editar"
+              padding="0.5rem 1rem"
+              background="blue"
+              color="white"
+              onClick={() => navigate(`/edit/${book.slug}`)}
+            />
+            <Button
+              value="Deletar"
+              padding="0.5rem 1rem"
+              background="red"
+              color="white"
+              onClick={() => handleDelete(book.slug)}
+            />
+            <Button
+              value="Curtir"
+              padding="0.5rem 1rem"
+              background="pink"
+              color="white"
+            />
+            <Button
+              value="Salvar"
+              padding="0.5rem 1rem"
+              background="lightpink"
+              color="white"
+            />
           </ButtonsContainer>
         </DivContainer>
       </FlexContainer>
@@ -96,10 +132,6 @@ const ButtonsContainer = styled.div`
   justify-content: flex-end;
   align-items: center;
   gap: 1rem;
-`
-
-const Button = styled.button`
-  padding: 0.5rem 1rem;
 `
 
 const Image = styled.img`

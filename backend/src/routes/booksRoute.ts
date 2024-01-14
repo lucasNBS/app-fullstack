@@ -46,10 +46,12 @@ router.post("/create", upload.single("coverImage"), async (req: Request, res: Re
   }
 })
 
+// MESMO ERRO DO CRIAR NO EDITAR. Middleware de fazer upload da imagem :)
+
 // Update book
-router.put("/edit/:slug", async (req: Request, res: Response) => {
+router.put("/edit/:slug", upload.single("coverImage"), async (req: Request, res: Response) => {
   const { slug } = req.params
-  const { title, description, coverImage, publishedDate, author } = req.body
+  const { title, description, publishedDate, author } = req.body
 
   const book = await bookModel.findOne({ slug })
 
@@ -58,7 +60,7 @@ router.put("/edit/:slug", async (req: Request, res: Response) => {
 
     if (title) book.title = title
     if (description) book.description = description
-    if (coverImage) book.coverImage = coverImage
+    // if (coverImage) book.coverImage = coverImage
     if (publishedDate) book.publishedDate = publishedDate
     if (author) book.author = author
 
