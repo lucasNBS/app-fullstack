@@ -1,3 +1,4 @@
+import { ReactNode } from "react"
 import styled from "styled-components"
 
 type ButtonProps = {
@@ -7,10 +8,12 @@ type ButtonProps = {
   color?: string
   padding?: string
   border?: string
-  borderRadius?: number
-  value?: string
+  borderRadius?: string
+  value?: string | ReactNode
   fontSize?: string
   onClick?: unknown
+  className?: string
+  display?: string
 }
 
 export default function Button({
@@ -24,6 +27,8 @@ export default function Button({
   value,
   onClick,
   fontSize,
+  className,
+  display,
 }: ButtonProps) {
   return (
     <ButtonComponent
@@ -36,6 +41,8 @@ export default function Button({
       borderRadius={borderRadius}
       onClick={onClick}
       fontSize={fontSize}
+      className={className}
+      display={display}
     >
       {value}
     </ButtonComponent>
@@ -43,13 +50,23 @@ export default function Button({
 }
 
 const ButtonComponent = styled.button<Omit<ButtonProps, "value">>`
+  display: ${({ display }) => display ? display : "flex"};
+  justify-content: center;
+  align-items: center;
   width: ${({ width }) => width ? width : "initial"};
   height: ${({ height }) => height ? height : "initial"};
   background: ${({ background }) => background ? background : "initial"};
   color: ${({ color }) => color ? color : "initial"};
   padding: ${({ padding }) => padding ? padding : "initial"};
   border: ${({ border }) => border ? border : "initial"};
-  borderRadius: ${({ borderRadius }) => borderRadius ? borderRadius : "initial"};
+  border-radius: ${({ borderRadius }) => borderRadius ? borderRadius : "initial"};
   font-size: ${({ fontSize }) => fontSize ? fontSize : "1rem"};
   cursor: pointer;
+
+  @media screen and (max-width: 768px) {
+    &.appear768 {
+      display: flex;
+    }
+  }
+
 `

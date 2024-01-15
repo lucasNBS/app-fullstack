@@ -1,13 +1,17 @@
 import LogoIcon from "/icons/Logo.svg"
 import styled from "styled-components"
 
-export default function Logo() {
+type LogoProps = {
+  className?: string
+}
+
+export default function Logo({ className }: LogoProps) {
   return (
-    <Container>
+    <Container className={className}>
       <Link href="/">
         <img src={LogoIcon} alt="Logo" width={50} height={50} />
       </Link>
-      MyBrary
+      <span>MyBrary</span>
     </Container>
   )
 }
@@ -21,6 +25,14 @@ const Container = styled.h1`
 
   img {
     filter: invert(1);
+  }
+
+  @media screen and (max-width: 550px) {
+    &.disapear-text {
+      span {
+        display: none;
+      }
+    }
   }
 `
 

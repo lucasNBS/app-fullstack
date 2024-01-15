@@ -31,4 +31,20 @@ const Container = styled.div`
   display: grid;
   grid-gap: 1.25rem;
   grid-template-columns: repeat(5, 1fr);
+
+  @media screen and (max-width: 1024px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  @media screen and (max-width: 768px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media screen and (max-width: 550px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media screen and (max-width: 450px) {
+    grid-template-columns: repeat(1, 1fr);
+  }
 `

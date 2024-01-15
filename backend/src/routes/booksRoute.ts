@@ -19,8 +19,7 @@ router.post("/create", upload.single("coverImage"), async (req: Request, res: Re
   const { title, description, publishedDate, author } = req.body
   const coverImage = req.file?.originalname
 
-  const imageURL = `http://localhost:8000/${req.file?.originalname}`
-  const formatedDate = publishedDate.replaceAll("-", "/")
+  const imageURL = `http://localhost:8000/${coverImage}`
 
   const tempPath = req.file?.path
   const targetPath = path.join(__dirname, `../../uploads/${coverImage}`)
@@ -35,7 +34,7 @@ router.post("/create", upload.single("coverImage"), async (req: Request, res: Re
     title,
     description,
     coverImage: imageURL,
-    publishedDate: formatedDate,
+    publishedDate,
     author
   })
 
@@ -46,12 +45,22 @@ router.post("/create", upload.single("coverImage"), async (req: Request, res: Re
   }
 })
 
-// MESMO ERRO DO CRIAR NO EDITAR. Middleware de fazer upload da imagem :)
-
 // Update book
 router.put("/edit/:slug", upload.single("coverImage"), async (req: Request, res: Response) => {
   const { slug } = req.params
   const { title, description, publishedDate, author } = req.body
+  const coverImage = req.file?.originalname
+
+  const imageURL = `http://localhost:8000/${coverImage}`
+
+  const tempPath = req.file?.path
+  const targetPath = path.join(__dirname, `../../uploads/${coverImage}`)
+
+  if (tempPath) {
+    fs.rename(tempPath, targetPath, (err) => {
+      if (err) return res.status(500)
+    })
+  }
 
   const book = await bookModel.findOne({ slug })
 
@@ -60,11 +69,12 @@ router.put("/edit/:slug", upload.single("coverImage"), async (req: Request, res:
 
     if (title) book.title = title
     if (description) book.description = description
-    // if (coverImage) book.coverImage = coverImage
+    if (coverImage) book.coverImage = imageURL
     if (publishedDate) book.publishedDate = publishedDate
     if (author) book.author = author
 
     await book.save()
+    res.sendStatus(201)
   } catch (err) {
     res.send(JSON.stringify(err))
   }

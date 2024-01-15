@@ -5,7 +5,7 @@ import { yupResolver } from "@hookform/resolvers/yup"
 import * as Yup from "yup"
 import Button from "../atoms/Button"
 import { book } from "src/types/books"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 
 const BookFormSchema = Yup.object().shape({
@@ -63,6 +63,7 @@ export default function BookForm({ submit, editPage }: BookFormProps) {
   } = useForm({
     resolver: yupResolver(BookFormSchema)
   })
+  const [image, setImage] = useState("")
 
   useEffect(() => {
     if (editPage) {
@@ -73,8 +74,14 @@ export default function BookForm({ submit, editPage }: BookFormProps) {
 
         let i: "title" | "description" | "author" | "publishedDate" | "coverImage"
         for (i in values) {
-          setValue(i, book[i])
+          if (i == "publishedDate") {
+            setValue(i, book[i] as unknown as Date)
+          } else {
+            setValue(i, book[i])
+          }
         }
+
+        setImage(book.coverImage)
       }
 
       getData()
@@ -121,7 +128,7 @@ export default function BookForm({ submit, editPage }: BookFormProps) {
               className="file-input"
               onChange={(e) => e.target.files && handleChangeImage(e.target.files[0])}
             />
-            <Image id="image-cover" src={addImage} alt="Capa do livro" />
+            <Image id="image-cover" src={image ? image : addImage} alt="Capa do livro" />
           </ImageContainer>
           {errors.coverImage?.message && <ErrorMessage>{errors.coverImage?.message as string}</ErrorMessage>}
         </FormGroup>
@@ -136,6 +143,10 @@ const FormContainer = styled.form`
   justify-content: center;
   align-items: flex-start;
   gap: 2rem;
+
+  @media screen and (max-width: 768px) {
+    flex-direction: column-reverse;
+  }
 `
 
 const Container = styled.div<{ width?: string }>`
@@ -145,6 +156,10 @@ const Container = styled.div<{ width?: string }>`
   justify-content: flex-start;
   align-items: flex-start;
   gap: 1rem;
+
+  @media screen and (max-width: 768px) {
+    width: 100%;
+  }
 `
 
 const FormGroup = styled.div`

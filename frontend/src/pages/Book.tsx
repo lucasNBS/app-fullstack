@@ -5,11 +5,9 @@ import styled from "styled-components"
 import { useNavigate, useParams } from "react-router-dom"
 
 function formatDate(date: string) {
-  const index = date.indexOf("T")
-  const newDateFormart = date.slice(0, index).split("-")
+  const newDateFormart = date.split("-")
 
   let newDate = ""
-
   newDateFormart.reverse().forEach((date) => {
     newDate += `${date}/`
   })
@@ -52,11 +50,9 @@ export default function Book() {
           <InfoContainer>
             <span>{book.publishedDate && formatDate(book.publishedDate)}</span>
             <span>{book.author}</span>
-            <span>Lorem, ipsum dolor.</span>
-            <span>Lorem, ipsum dolor.</span>
           </InfoContainer>
         </DivContainer>
-        <DivContainer width="60" justifyContent="space-between">
+        <DivContainer width="60" justifycontent="space-between">
           <p>{book.description}</p>
           <ButtonsContainer>
             <Button
@@ -93,6 +89,7 @@ export default function Book() {
 }
 
 const Container = styled.section`
+  width: calc(100% - 6rem);
   max-width: 1200px;
   min-height: calc(100vh - 285px - 4rem);
   margin: 2rem auto;
@@ -111,18 +108,27 @@ const FlexContainer = styled.div`
   justify-content: flex-start;
   align-items: flex-start;
   gap: 2rem;
+
+  @media screen and (max-width: 768px) {
+    flex-direction: column;
+    gap: 1rem;
+  }
 `
 
-const DivContainer = styled.div<{ width?: string, justifyContent?: string }>`
+const DivContainer = styled.div<{ width?: string, justifycontent?: string }>`
   width: ${({ width }) => width ? `${width}%` : "100%"};
   display: flex;
   flex-direction: column;
-  justify-content: ${({ justifyContent }) => justifyContent ? justifyContent : "flex-start"};
+  justify-content: ${({ justifycontent }) => justifycontent ? justifycontent : "flex-start"};
   align-items: flex-start;
   gap: 1rem;
 
   p {
     min-height: 700.8px;
+  }
+
+  @media screen and (max-width: 768px) {
+    width: 100%;
   }
 `
 
