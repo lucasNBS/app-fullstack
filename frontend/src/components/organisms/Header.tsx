@@ -3,7 +3,7 @@ import Logo from "src/components/atoms/Logo"
 import Navbar from "src/components/molecules/Navbar"
 import ToggleTheme from "src/components/atoms/ToggleTheme"
 import Button from "../atoms/Button"
-import HamburguerButtonIcon from "public/icons/hamburguerButtonIcon.svg"
+import HamburguerButtonIcon from "public/assets/icons/hamburguerButtonIcon.svg"
 import AsideMenu from "../molecules/AsideMenu"
 import { useState } from "react"
 

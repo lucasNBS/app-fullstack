@@ -1,5 +1,5 @@
 import styled from "styled-components"
-import addImage from "/icons/addImage.svg"
+import addImage from "public/assets/icons/addImage.svg"
 import { useForm } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
 import * as Yup from "yup"
@@ -112,7 +112,7 @@ export default function BookForm({ submit, editPage }: BookFormProps) {
           {errors.description?.message && <ErrorMessage>{errors.description?.message as string}</ErrorMessage>}
         </FormGroup>
         <Button
-          value="Enviar"
+          value="Send"
           background="green"
           color="#fff"
           padding="0.5rem 1rem"

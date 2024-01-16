@@ -1,11 +1,10 @@
 import { book } from "src/types/books"
 import styled from "styled-components"
 
-type GalleryCardProps = Omit<book, "id" | "likedBy" | "publishedDate">
+type GalleryCardProps = Omit<book, "id" | "author" | "likedBy" | "publishedDate">
 
 export default function GalleryCard({
   title,
-  author,
   coverImage,
   description,
   slug

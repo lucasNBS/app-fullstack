@@ -1,7 +1,7 @@
 import styled from "styled-components"
 import Logo from "../atoms/Logo"
 import Navbar from "./Navbar"
-import IconClose from "public/icons/iconClose.svg"
+import IconClose from "public/assets/icons/iconClose.svg"
 
 type AsideMenuProps = {
   open: boolean
@@ -57,6 +57,7 @@ const Close = styled.span`
   right: 1.5rem;
   width: 24px;
   height: 24px;
+  filter: brightness(0) saturate(100%) invert(11%) sepia(78%) saturate(5174%) hue-rotate(3deg) brightness(131%) contrast(129%);
   background: no-repeat center url(${IconClose});
   background-size: 24px;
 `

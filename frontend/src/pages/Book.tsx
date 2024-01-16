@@ -129,6 +129,10 @@ const DivContainer = styled.div<{ width?: string, justifycontent?: string }>`
 
   @media screen and (max-width: 768px) {
     width: 100%;
+
+    p {
+      min-height: initial;
+    }
   }
 `
 
@@ -138,6 +142,11 @@ const ButtonsContainer = styled.div`
   justify-content: flex-end;
   align-items: center;
   gap: 1rem;
+
+  @media screen and (max-width: 550px) {
+    flex-direction: column;
+    align-items: stretch;
+  }
 `
 
 const Image = styled.img`

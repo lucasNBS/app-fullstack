@@ -15,7 +15,7 @@ export default function UpdateBook() {
       body: newData,
     })
 
-    if (res.status === 201) {
+    if (res.status === 204) {
       navigate("/")
     }
   }

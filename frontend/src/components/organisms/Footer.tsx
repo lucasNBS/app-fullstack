@@ -1,4 +1,4 @@
-import LogoIcon from "/icons/Logo.svg"
+import LogoIcon from "public/assets/icons/Logo.svg"
 import styled from "styled-components"
 
 export default function Footer() {

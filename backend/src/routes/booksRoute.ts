@@ -10,8 +10,24 @@ const upload = multer({ dest: "uploads/" })
 
 // Get all books
 router.get("/all", async (req: Request, res: Response) => {
+  const page = Number(req.query.page) ? Number(req.query.page) : 1
+
   const books = await bookModel.find()
-  res.send(JSON.stringify(books))
+
+  const pageBooks = books.slice((Number(page) - 1) * 20, Number(page) * 20)
+
+  const maxPageValue = Math.ceil(books.length / 20)
+
+  const prev = page > 1 ? `http://localhost:8000/book/all?page=${page - 1}` : null
+  const next = page < maxPageValue ? `http://localhost:8000/book/all?page=${page + 1}` : null
+
+  const objectToSend = {
+    prev: prev,
+    next: next,
+    results: pageBooks
+  }
+
+  res.send(JSON.stringify(objectToSend))
 })
 
 // Create book
@@ -40,6 +56,7 @@ router.post("/create", upload.single("coverImage"), async (req: Request, res: Re
 
   try {
     await book.save()
+    res.sendStatus(201)
   } catch (err) {
     res.send(JSON.stringify(err))
   }
@@ -74,7 +91,7 @@ router.put("/edit/:slug", upload.single("coverImage"), async (req: Request, res:
     if (author) book.author = author
 
     await book.save()
-    res.sendStatus(201)
+    res.sendStatus(204)
   } catch (err) {
     res.send(JSON.stringify(err))
   }
