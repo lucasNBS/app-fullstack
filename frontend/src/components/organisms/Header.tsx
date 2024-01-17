@@ -6,6 +6,7 @@ import Button from "../atoms/Button"
 import HamburguerButtonIcon from "public/assets/icons/hamburguerButtonIcon.svg"
 import AsideMenu from "../molecules/AsideMenu"
 import { useState } from "react"
+import LoginButton from "../molecules/LoginButton"
 
 export default function Header() {
   const [openMenu, setOpenMenu] = useState(false)
@@ -59,12 +60,6 @@ const ContainerSide = styled.div`
       gap: 1rem;
     }
   }
-`
-
-const LoginButton = styled.div`
-  background-color: red;
-  width: 60px;
-  height: 20px;
 `
 
 const Image = styled.img`
