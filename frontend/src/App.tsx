@@ -1,9 +1,9 @@
 import { ReactNode } from "react"
 import GlobalStyle from "src/GlobalStyle"
 import Router from "src/components/atoms/Router"
-import ThemeContext from "src/contexts/ThemeContext"
 import Header from "src/components/organisms/Header"
 import Footer from "src/components/organisms/Footer"
+import UserContext from "./contexts/UserContext"
 
 type AppProps = {
   children: ReactNode
@@ -12,13 +12,13 @@ type AppProps = {
 function App({ children }: AppProps) {
   return (
     <>
-      <ThemeContext>
+      <UserContext>
         <Header />
         <GlobalStyle />
         <Router />
         {children}
         <Footer />
-      </ThemeContext>
+      </UserContext>
     </>
   )
 }

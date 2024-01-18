@@ -1,9 +1,11 @@
 require("dotenv").config()
 import express, { Request, Response } from "express"
 import mongoose from "mongoose"
-import { bookRouter } from "./routes/booksRoute"
 import cors from "cors"
 import path from "path"
+import cookieParser from "cookie-parser"
+import { bookRouter } from "./routes/booksRoute"
+import { userRouter } from "./routes/userRoute"
 
 // Config / Connect to DB
 mongoose.connect(process.env.DATABASE_URL as string)
@@ -19,8 +21,10 @@ app.use(express.static("/public"))
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(cors({
-  origin: ["http://localhost:3000", "http://localhost:4173"]
+  origin: ["http://localhost:3000", "http://localhost:4173"],
+  credentials: true,
 }))
+app.use(cookieParser())
 
 // Server routes
 app.get("/", (req: Request, res: Response) => {
@@ -31,6 +35,7 @@ app.get("/:slug", (req: Request, res: Response) => {
 
   res.sendFile(path.join(__dirname, `../uploads/${slug}`))
 })
+app.use("/user", userRouter)
 app.use("/book", bookRouter)
 
 // Initialize server

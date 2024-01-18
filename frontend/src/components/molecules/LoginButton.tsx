@@ -1,11 +1,31 @@
 import { useState } from "react";
 import Button from "../atoms/Button";
 import LoginModal from "../organisms/LoginModal";
+import { useContextSelector } from "use-context-selector";
+import { UserPreferences } from "src/contexts/UserContext";
+import styled from "styled-components";
 
 export default function LoginButton() {
   const [openModal, setOpenModal] = useState(false)
+  const { user, setUser } = useContextSelector(UserPreferences, (ctx) => {
+    return {
+      user: ctx.user,
+      setUser: ctx.setUser,
+    }
+  })
 
-  return (
+  async function logout(e: React.MouseEvent<HTMLSpanElement, MouseEvent>) {
+    await fetch("http://localhost:8000/user/logout", {
+      method: "DELETE",
+      credentials: "include",
+    })
+    setUser(null)
+    setOpenModal(false)
+  }
+
+  return user?.username ? (
+    <UserName onClick={(e) => logout(e)}>{user.username}</UserName>
+  ) : (
     <>
       <Button
         background="#f00"
@@ -24,3 +44,8 @@ export default function LoginButton() {
     </>
   )
 }
+
+const UserName = styled.span`
+  cursor: pointer;
+  color: #fff;
+`

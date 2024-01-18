@@ -26,10 +26,12 @@ export default function FormRegister() {
     const form = document.getElementById("form") as HTMLFormElement
     const data = new FormData(form)
 
-    const res = await fetch("", {
+    const res = await fetch("http://localhost:8000/user/register", {
       method: "POST",
       body: data,
-    })
+    }).then(res => res.json())
+
+    console.log(res)
   }
 
   return (

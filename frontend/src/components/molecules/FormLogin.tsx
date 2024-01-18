@@ -4,6 +4,8 @@ import { useContext } from "react"
 import * as Yup from "yup"
 import { useForm } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
+import { useContextSelector } from "use-context-selector"
+import { UserPreferences } from "src/contexts/UserContext"
 
 const LoginSchema = Yup.object().shape({
   email: Yup.string().email().required("Preencha o campo").min(3, "E-mail muito curto").max(50, "E-mail muito longo"),
@@ -12,6 +14,11 @@ const LoginSchema = Yup.object().shape({
 
 export default function FormLogin() {
   const theme = useContext(ThemeContext)
+  const { setUser } = useContextSelector(UserPreferences, (ctx) => {
+    return {
+      setUser: ctx.setUser
+    }
+  })
   const {
     register,
     handleSubmit,
@@ -21,11 +28,20 @@ export default function FormLogin() {
   })
 
   async function submit() {
+    const form = document.getElementById("form") as HTMLFormElement
+    const data = new FormData(form)
 
+    const res = await fetch("http://localhost:8000/user/login", {
+      method: "POST",
+      credentials: "include",
+      body: data,
+    }).then(res => res.json())
+
+    setUser(res)
   }
 
   return (
-    <Container method="post" onSubmit={handleSubmit(submit)}>
+    <Container id="form" method="post" onSubmit={handleSubmit(submit)}>
       <FormGroup>
         <FormLabel>E-mail</FormLabel>
         <FormInput {...register("email")} type="email" />
