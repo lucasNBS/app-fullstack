@@ -1,4 +1,5 @@
 import LogoIcon from "public/assets/icons/Logo.svg"
+import { Link as ReactLink } from "react-router-dom"
 import styled from "styled-components"
 
 type LogoProps = {
@@ -8,7 +9,7 @@ type LogoProps = {
 export default function Logo({ className }: LogoProps) {
   return (
     <Container className={className}>
-      <Link href="/">
+      <Link to="/">
         <img src={LogoIcon} alt="Logo" width={50} height={50} />
       </Link>
       <span>MyBrary</span>
@@ -36,7 +37,7 @@ const Container = styled.h1`
   }
 `
 
-const Link = styled.a`
+const Link = styled(ReactLink)`
   width: 50px;
   height: 50px;
 `

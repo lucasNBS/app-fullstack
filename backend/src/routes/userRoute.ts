@@ -51,8 +51,8 @@ router.post("/login", upload.none(), async (req: Request, res: Response) => {
     const accessToken = jwt.sign(newUser, process.env.ACCESS_TOKEN_SECRET as string, { expiresIn: "20s" })
     const refreshToken = jwt.sign(newUser, process.env.REFRESH_TOKEN_SECRET as string)
 
-    res.cookie("AccessToken", accessToken, { httpOnly: true })
-    res.cookie("RefreshToken", refreshToken, { httpOnly: true })
+    res.cookie("AccessToken", accessToken, { maxAge: 20000 })
+    res.cookie("RefreshToken", refreshToken)
 
     res.send(JSON.stringify({ username: newUser.username }))
   } catch (err) {
@@ -75,7 +75,7 @@ router.post("/token", upload.none(), (req: Request, res: Response) => {
     if (err) return res.sendStatus(403)
 
     const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET as string, { expiresIn: "20s" })
-    res.send(JSON.stringify(accessToken))
+    res.cookie("AccessToken", accessToken, { maxAge: 20000 })
   })
 
 })

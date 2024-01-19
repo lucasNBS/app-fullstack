@@ -1,4 +1,5 @@
 import styled from "styled-components"
+import { Link as ReactLink } from "react-router-dom"
 
 type NavBarProps = {
   classNameContainer?: string
@@ -10,13 +11,13 @@ export default function Navbar({ classNameContainer, classNameList }: NavBarProp
     <Container className={classNameContainer}>
       <NavbarList className={classNameList}>
         <ListItem>
-          <Link href="/">Home</Link>
+          <Link to={"/"}>Home</Link>
         </ListItem>
         <ListItem>
-          <Link href="/new-book">New Book</Link>
+          <Link to={"/new-book"}>New Book</Link>
         </ListItem>
         <ListItem>
-          <Link href="/">My Books</Link>
+          <Link to={"/my-books"}>My Books</Link>
         </ListItem>
       </NavbarList>
     </Container>
@@ -50,7 +51,7 @@ const NavbarList = styled.ul`
 
 const ListItem = styled.li``
 
-const Link = styled.a`
+const Link = styled(ReactLink)`
   text-decoration: none;
   color: white;
 `
