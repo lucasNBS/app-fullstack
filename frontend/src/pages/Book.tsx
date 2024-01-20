@@ -50,6 +50,7 @@ export default function Book() {
           <InfoContainer>
             <span>{book.publishedDate && formatDate(book.publishedDate)}</span>
             <span>{book.author}</span>
+            <span>{book.postedBy?.username}</span>
           </InfoContainer>
         </DivContainer>
         <DivContainer width="60" justifycontent="space-between">

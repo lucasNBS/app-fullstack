@@ -1,9 +1,10 @@
 require("dotenv").config()
 import express, { Request, Response } from "express"
-import userModel from "../models/userModel"
 import multer from "multer"
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
+import userModel from "../models/userModel"
+import { authenticateToken } from "../utils/functions"
 
 const router = express.Router()
 const upload = multer({})
@@ -54,13 +55,13 @@ router.post("/login", upload.none(), async (req: Request, res: Response) => {
     res.cookie("AccessToken", accessToken, { maxAge: 20000 })
     res.cookie("RefreshToken", refreshToken)
 
-    res.send(JSON.stringify({ username: newUser.username }))
+    res.send(JSON.stringify({ username: newUser.username, email: newUser.email }))
   } catch (err) {
     res.sendStatus(500)
   }
 })
 
-router.delete("/logout", (req: Request, res: Response) => {
+router.delete("/logout", authenticateToken, (req: Request, res: Response) => {
   res.clearCookie("AccessToken")
   res.clearCookie("RefreshToken")
   res.sendStatus(200)
@@ -74,8 +75,16 @@ router.post("/token", upload.none(), (req: Request, res: Response) => {
   jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET as string, (err: any, user: any) => {
     if (err) return res.sendStatus(403)
 
-    const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET as string, { expiresIn: "20s" })
+    const newUser = {
+      username: user.username,
+      email: user.email,
+      password: user.password,
+      confirmPassword: user.confirmPassword,
+    }
+
+    const accessToken = jwt.sign(newUser, process.env.ACCESS_TOKEN_SECRET as string, { expiresIn: "20s" })
     res.cookie("AccessToken", accessToken, { maxAge: 20000 })
+    res.sendStatus(200)
   })
 
 })

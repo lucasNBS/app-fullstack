@@ -1,17 +1,30 @@
 import styled from "styled-components"
 import BookForm from "src/components/organisms/BookForm"
 import { useNavigate } from "react-router-dom"
+import { parseCookies } from "nookies"
+import { useContextSelector } from "use-context-selector"
+import { UserPreferences } from "src/contexts/UserContext"
 
 export default function CreateBook() {
   const navigate = useNavigate()
+  const { user } = useContextSelector(UserPreferences, (ctx) => {
+    return {
+      user: ctx.user
+    }
+  })
 
   async function submit() {
+    const token = parseCookies()["AccessToken"]
     const form = document.getElementById("form") as HTMLFormElement
     const newData = new FormData(form)
+    newData.append("email", user ? user.email : "")
 
     const res = await fetch("http://localhost:8000/book/create", {
       method: "POST",
       body: newData,
+      headers: {
+        "Authorization": `Bearer ${token}`
+      }
     })
     if (res.status === 201) {
       navigate("/")

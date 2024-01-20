@@ -27,11 +27,11 @@ const BookSchema = new mongoose.Schema({
     required: true,
     unique: true
   },
-  // postedBy: {
-  //   type: mongoose.Schema.Types.ObjectId,
-  //   ref: "User",
-  //   required: true,
-  // },
+  postedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
   likedBy: {
     type: [mongoose.Schema.Types.ObjectId],
     ref: "User"

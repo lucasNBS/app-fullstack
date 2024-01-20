@@ -1,5 +1,6 @@
 import { parseCookies, setCookie } from "nookies"
 import { Dispatch, ReactNode, SetStateAction, useState } from "react"
+import { User } from "src/types/user"
 import { ThemeProvider } from "styled-components"
 import { createContext } from "use-context-selector"
 
@@ -11,10 +12,6 @@ type ThemeType = {
     blue500: string
     blue800: string
   }
-}
-
-type UserType = {
-  username: string
 }
 
 const lightTheme: ThemeType = {
@@ -38,14 +35,14 @@ const darkTheme: ThemeType = {
 }
 
 type UserPreferencesType = {
-  user: UserType | null
-  setUser: Dispatch<React.SetStateAction<UserType | null>>
+  user: User | null
+  setUser: Dispatch<React.SetStateAction<User | null>>
   toggleTheme: () => void
 }
 
 export const UserPreferences = createContext<UserPreferencesType>({
-  user: {} as UserType,
-  setUser: (pre: SetStateAction<UserType | null>) => { },
+  user: {} as User,
+  setUser: (pre: SetStateAction<User | null>) => { },
   toggleTheme: () => { }
 })
 
@@ -57,7 +54,7 @@ export default function UserContext({ children }: UserContextProps) {
   const cookieTheme: ThemeType | null = JSON.parse(parseCookies()["Theme"])
 
   const [theme, setTheme] = useState(cookieTheme ? cookieTheme : lightTheme)
-  const [user, setUser] = useState<UserType | null>(null)
+  const [user, setUser] = useState<User | null>(null)
 
   function toggleTheme() {
     setTheme(theme => theme.title == "light" ? darkTheme : lightTheme)

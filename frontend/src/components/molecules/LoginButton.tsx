@@ -14,7 +14,7 @@ export default function LoginButton() {
     }
   })
 
-  async function logout(e: React.MouseEvent<HTMLSpanElement, MouseEvent>) {
+  async function logout() {
     await fetch("http://localhost:8000/user/logout", {
       method: "DELETE",
       credentials: "include",
@@ -24,7 +24,7 @@ export default function LoginButton() {
   }
 
   return user?.username ? (
-    <UserName onClick={(e) => logout(e)}>{user.username}</UserName>
+    <UserName onClick={() => logout()}>{user.username}</UserName>
   ) : (
     <>
       <Button

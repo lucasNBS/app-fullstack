@@ -14,6 +14,7 @@ type ButtonProps = {
   onClick?: unknown
   className?: string
   display?: string
+  zIndex?: string
 }
 
 export default function Button({
@@ -29,6 +30,7 @@ export default function Button({
   fontSize,
   className,
   display,
+  zIndex,
 }: ButtonProps) {
   return (
     <ButtonComponent
@@ -43,6 +45,7 @@ export default function Button({
       fontSize={fontSize}
       className={className}
       display={display}
+      zIndex={zIndex}
     >
       {value}
     </ButtonComponent>
@@ -61,6 +64,7 @@ const ButtonComponent = styled.button<Omit<ButtonProps, "value">>`
   border: ${({ border }) => border ? border : "initial"};
   border-radius: ${({ borderRadius }) => borderRadius ? borderRadius : "initial"};
   font-size: ${({ fontSize }) => fontSize ? fontSize : "1rem"};
+  z-index: ${({ zIndex }) => zIndex ? zIndex : "1"};
   cursor: pointer;
 
   @media screen and (max-width: 768px) {

@@ -3,6 +3,8 @@ import bookModel from "../models/bookModel"
 import multer from "multer"
 import path from "path"
 import fs from "fs"
+import { authenticateToken } from "../utils/functions"
+import userModel from "../models/userModel"
 
 // Initialize route
 const router = express.Router()
@@ -31,8 +33,8 @@ router.get("/all", async (req: Request, res: Response) => {
 })
 
 // Create book
-router.post("/create", upload.single("coverImage"), async (req: Request, res: Response) => {
-  const { title, description, publishedDate, author } = req.body
+router.post("/create", authenticateToken, upload.single("coverImage"), async (req: Request, res: Response) => {
+  const { title, description, publishedDate, author, email } = req.body
   const coverImage = req.file?.originalname
 
   const imageURL = `http://localhost:8000/${coverImage}`
@@ -46,12 +48,17 @@ router.post("/create", upload.single("coverImage"), async (req: Request, res: Re
     })
   }
 
+  const user = await userModel.findOne({ email })
+
+  if (!user) return res.sendStatus(401)
+
   const book = new bookModel({
     title,
     description,
     coverImage: imageURL,
     publishedDate,
-    author
+    author,
+    postedBy: user._id,
   })
 
   try {
@@ -115,10 +122,47 @@ router.get("/:slug", async (req: Request, res: Response) => {
   try {
     const book = await bookModel.findOne({ slug })
 
-    res.send(JSON.stringify(book))
+    if (!book) return res.sendStatus(404)
+
+    const userId = book.postedBy
+
+    const user = await userModel.findById(userId)
+
+    const bookToSend = {
+      title: book.title,
+      coverImage: book.coverImage,
+      description: book.description,
+      publishedDate: book.publishedDate,
+      author: book.author,
+      slug: book.slug,
+      postedBy: user,
+      likedBy: book.likedBy,
+    }
+
+    res.send(JSON.stringify(bookToSend))
   } catch (err) {
     res.send(JSON.stringify(err))
   }
+})
+
+router.put("/like/:slug", upload.none(), authenticateToken, async (req, res) => {
+  const { slug } = req.params
+  const { email } = req.body
+
+  const user = await userModel.findOne({ email })
+  let book = await bookModel.findOne({ slug })
+
+  if (!book || !user) return res.sendStatus(404)
+
+  if (book.likedBy.includes(user._id)) {
+    book.likedBy.filter((id) => id != user._id)
+  } else {
+    book.likedBy.push(user._id)
+  }
+
+  await book.save()
+
+  res.sendStatus(200)
 })
 
 export const bookRouter = router

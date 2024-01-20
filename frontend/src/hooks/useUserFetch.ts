@@ -18,6 +18,8 @@ export default function useUserFetch() {
       },
       body: JSON.stringify(data),
     }).then(res => res.json())
+
+    console.log(res)
   }
 
   useEffect(() => {
