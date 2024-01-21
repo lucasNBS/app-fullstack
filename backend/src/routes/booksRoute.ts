@@ -13,8 +13,13 @@ const upload = multer({ dest: "uploads/" })
 // Get all books
 router.get("/all", async (req: Request, res: Response) => {
   const page = Number(req.query.page) ? Number(req.query.page) : 1
+  const { search } = req.query
 
-  const books = await bookModel.find()
+  let books = await bookModel.find()
+
+  if (search) {
+    books = books.filter(book => book.title.includes(search as string))
+  }
 
   const pageBooks = books.slice((Number(page) - 1) * 20, Number(page) * 20)
 

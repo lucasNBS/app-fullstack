@@ -9,7 +9,6 @@ export default function Home() {
   return (
     <Container>
       <BooksSwiper title="Most Liked Books" />
-      <SearchBar />
       <Gallery />
     </Container>
   )
@@ -24,12 +23,5 @@ const Container = styled.section`
   justify-content: flex-start;
   align-items: flex-end;
   flex-direction: column;
-  gap: 2rem;
-`
-
-const SearchBar = styled.div`
-  background-color: red;
-  width: 300px;
-  height: 32px;
-  border-radius: 32px;
+  gap: 3rem;
 `

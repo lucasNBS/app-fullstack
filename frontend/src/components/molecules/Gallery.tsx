@@ -3,11 +3,14 @@ import GalleryCard from "../atoms/GalleryCard"
 import { useEffect, useState } from "react"
 import { book } from "src/types/books"
 import Pagination from "./Pagination"
+import Search from "../atoms/Search"
+import { useForm } from "react-hook-form"
 
 export default function Gallery() {
   const [list, setList] = useState<book[]>([])
   const [page, setPage] = useState(1)
   const [hasMore, setHasMore] = useState(true)
+  const { register, handleSubmit, getValues } = useForm()
 
   const firstBookIndex = (page - 1) * 20
   const lastBookIndex = page * 20
@@ -22,8 +25,16 @@ export default function Gallery() {
     setPage(pre => pre + 1)
     if (lastBookIndex < list.length) return
 
-    const books = await fetch(`http://localhost:8000/book/all?page=${page + 1}`).then(res => res.json())
+    const books = await fetch(`http://localhost:8000/book/all?page=${page + 1}&search=${getValues("search")}`).then(res => res.json())
     setList(pre => [...pre, ...books.results])
+    setHasMore(books.next ? true : false)
+  }
+
+  async function handleSearch() {
+    const books = await fetch(`http://localhost:8000/book/all?page=1&search=${getValues("search")}`)
+      .then(res => res.json())
+    setPage(1)
+    setList(books.results)
     setHasMore(books.next ? true : false)
   }
 
@@ -33,6 +44,11 @@ export default function Gallery() {
 
   return (
     <Container>
+      <Search
+        register={register}
+        handleSubmit={handleSubmit}
+        handleSearch={handleSearch}
+      />
       <ContainerGrid>
         {list.slice(firstBookIndex, lastBookIndex).map((item) => {
           return (
@@ -51,11 +67,12 @@ export default function Gallery() {
 }
 
 const Container = styled.section`
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-end;
-  gap: 1rem;
+  gap: 1.5rem;
 `
 
 const ContainerGrid = styled.div`
