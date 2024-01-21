@@ -3,7 +3,7 @@ import bookModel from "../models/bookModel"
 import multer from "multer"
 import path from "path"
 import fs from "fs"
-import { authenticateToken } from "../utils/functions"
+import { authenticateToken, isAuthor } from "../utils/functions"
 import userModel from "../models/userModel"
 
 // Initialize route
@@ -70,7 +70,7 @@ router.post("/create", authenticateToken, upload.single("coverImage"), async (re
 })
 
 // Update book
-router.put("/edit/:slug", upload.single("coverImage"), async (req: Request, res: Response) => {
+router.put("/edit/:slug", isAuthor(), upload.single("coverImage"), async (req: Request, res: Response) => {
   const { slug } = req.params
   const { title, description, publishedDate, author } = req.body
   const coverImage = req.file?.originalname
@@ -105,11 +105,12 @@ router.put("/edit/:slug", upload.single("coverImage"), async (req: Request, res:
 })
 
 // Delete book
-router.delete("/delete/:slug", async (req: Request, res: Response) => {
+router.delete("/delete/:slug", isAuthor(), async (req: Request, res: Response) => {
   const { slug } = req.params
 
   try {
     await bookModel.findOneAndDelete({ slug })
+    res.sendStatus(200)
   } catch (err) {
     res.send(JSON.stringify(err))
   }
@@ -155,7 +156,7 @@ router.put("/like/:slug", upload.none(), authenticateToken, async (req, res) => 
   if (!book || !user) return res.sendStatus(404)
 
   if (book.likedBy.includes(user._id)) {
-    book.likedBy.filter((id) => id != user._id)
+    book.likedBy = book.likedBy.filter((id) => !id.equals(user._id))
   } else {
     book.likedBy.push(user._id)
   }

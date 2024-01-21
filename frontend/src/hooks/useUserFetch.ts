@@ -10,7 +10,7 @@ export default function useUserFetch() {
       refreshToken: refreshToken
     }
 
-    const res = await fetch("http://localhost:8000/user/token", {
+    await fetch("http://localhost:8000/user/token", {
       method: "POST",
       credentials: "include",
       headers: {
@@ -18,8 +18,6 @@ export default function useUserFetch() {
       },
       body: JSON.stringify(data),
     }).then(res => res.json())
-
-    console.log(res)
   }
 
   useEffect(() => {

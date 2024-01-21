@@ -3,6 +3,9 @@ import Button from "src/components/atoms/Button"
 import { book } from "src/types/books"
 import styled from "styled-components"
 import { useNavigate, useParams } from "react-router-dom"
+import { parseCookies } from "nookies"
+import { useContextSelector } from "use-context-selector"
+import { UserPreferences } from "src/contexts/UserContext"
 
 function formatDate(date: string) {
   const newDateFormart = date.split("-")
@@ -19,6 +22,11 @@ export default function Book() {
   const [book, setBook] = useState<book>({} as book)
   const { slug } = useParams()
   const navigate = useNavigate()
+  const { user } = useContextSelector(UserPreferences, (ctx) => {
+    return {
+      user: ctx.user
+    }
+  })
 
   useEffect(() => {
     const getData = async () => {
@@ -29,15 +37,40 @@ export default function Book() {
     getData()
   }, [])
 
-  function handleDelete(slug: string) {
-
+  async function handleDelete(slug: string) {
+    const token = parseCookies()["AccessToken"]
     const answer = confirm("Você deseja excluir o livro?")
 
     if (answer) {
-      fetch(`http://localhost:8000/book/delete/${slug}`, {
+      const res = await fetch(`http://localhost:8000/book/delete/${slug}`, {
         method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+        body: JSON.stringify(user)
       })
-      navigate("/")
+      if (res.status === 200 || res.status === 204) {
+        navigate("/")
+      }
+    }
+  }
+
+  async function handleLike(slug: string) {
+    const token = parseCookies()["AccessToken"]
+
+    const res = await fetch(`http://localhost:8000/book/like/${slug}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`,
+      },
+      body: JSON.stringify(user)
+    })
+
+    if (res.status === 200) {
+      const book = await fetch(`http://localhost:8000/book/${slug}`).then(res => res.json())
+      setBook(book)
     }
   }
 
@@ -49,38 +82,41 @@ export default function Book() {
           <Image src={book.coverImage} alt="Capa do livro" />
           <InfoContainer>
             <span>{book.publishedDate && formatDate(book.publishedDate)}</span>
-            <span>{book.author}</span>
-            <span>{book.postedBy?.username}</span>
+            <span><strong>Autor:</strong> {book.author}</span>
+            <span><strong>Postado por:</strong> {book.postedBy?.username}</span>
+            <span><strong>Likes:</strong> {book.likedBy?.length}</span>
           </InfoContainer>
         </DivContainer>
         <DivContainer width="60" justifycontent="space-between">
           <p>{book.description}</p>
           <ButtonsContainer>
+            {user && (
+              <>
+                <Button
+                  value="Editar"
+                  padding="0.5rem 1rem"
+                  background="blue"
+                  color="white"
+                  onClick={() => navigate(`/edit/${book.slug}`)}
+                />
+                <Button
+                  value="Deletar"
+                  padding="0.5rem 1rem"
+                  background="red"
+                  color="white"
+                  onClick={() => handleDelete(book.slug)}
+                />
+              </>
+            )}
             <Button
-              value="Editar"
-              padding="0.5rem 1rem"
-              background="blue"
-              color="white"
-              onClick={() => navigate(`/edit/${book.slug}`)}
-            />
-            <Button
-              value="Deletar"
-              padding="0.5rem 1rem"
+              value="&#10084;"
+              borderRadius="100%"
+              width="40px"
+              height="40px"
+              padding="1rem 1rem"
               background="red"
               color="white"
-              onClick={() => handleDelete(book.slug)}
-            />
-            <Button
-              value="Curtir"
-              padding="0.5rem 1rem"
-              background="pink"
-              color="white"
-            />
-            <Button
-              value="Salvar"
-              padding="0.5rem 1rem"
-              background="lightpink"
-              color="white"
+              onClick={() => handleLike(book.slug)}
             />
           </ButtonsContainer>
         </DivContainer>

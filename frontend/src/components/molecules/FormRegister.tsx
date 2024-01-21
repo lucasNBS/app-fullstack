@@ -31,7 +31,6 @@ export default function FormRegister() {
       body: data,
     }).then(res => res.json())
 
-    console.log(res)
   }
 
   return (

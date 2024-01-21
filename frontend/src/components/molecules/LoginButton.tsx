@@ -35,12 +35,7 @@ export default function LoginButton() {
         borderRadius="16px"
         onClick={() => setOpenModal(pre => !pre)}
       />
-      {openModal && (
-        <LoginModal
-          open={openModal}
-          setOpen={setOpenModal}
-        />
-      )}
+      {openModal && <LoginModal setOpen={setOpenModal} />}
     </>
   )
 }

@@ -6,13 +6,12 @@ import FormLogin from "../molecules/FormLogin"
 import iconClose from "public/assets/icons/iconClose.svg"
 
 type LoginModalProps = {
-  open: boolean
   setOpen: Dispatch<SetStateAction<boolean>>
 }
 
 type FormType = "register" | "login"
 
-export default function LoginModal({ open, setOpen }: LoginModalProps) {
+export default function LoginModal({ setOpen }: LoginModalProps) {
   const [formSelected, setFormSelected] = useState<FormType>("register")
 
   return (

@@ -17,7 +17,7 @@ const UserModel = new mongoose.Schema({
   confirmPassword: {
     type: String,
     required: true
-  }
+  },
 })
 
 export default mongoose.model("User", UserModel)
