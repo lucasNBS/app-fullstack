@@ -4,7 +4,6 @@ import multer from "multer"
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 import userModel from "../models/userModel"
-import { authenticateToken } from "../utils/functions"
 
 const router = express.Router()
 const upload = multer({})
@@ -61,7 +60,7 @@ router.post("/login", upload.none(), async (req: Request, res: Response) => {
   }
 })
 
-router.delete("/logout", authenticateToken, (req: Request, res: Response) => {
+router.delete("/logout", (req: Request, res: Response) => {
   res.clearCookie("AccessToken")
   res.clearCookie("RefreshToken")
   res.sendStatus(200)
@@ -84,7 +83,7 @@ router.post("/token", upload.none(), (req: Request, res: Response) => {
 
     const accessToken = jwt.sign(newUser, process.env.ACCESS_TOKEN_SECRET as string, { expiresIn: "20s" })
     res.cookie("AccessToken", accessToken, { maxAge: 20000 })
-    res.sendStatus(200)
+    res.send(JSON.stringify({ username: user.username, email: user.email }))
   })
 
 })

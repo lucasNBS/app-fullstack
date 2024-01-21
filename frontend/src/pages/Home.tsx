@@ -1,13 +1,14 @@
 import styled from "styled-components"
 import BooksSwiper from "src/components/molecules/BooksSwiper"
 import Gallery from "src/components/molecules/Gallery"
-
-const list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+import useUserFetch from "src/hooks/useUserFetch"
 
 export default function Home() {
+  useUserFetch()
+
   return (
     <Container>
-      <BooksSwiper itemsList={list} title="Most Liked Books" />
+      <BooksSwiper title="Most Liked Books" />
       <SearchBar />
       <Gallery />
     </Container>

@@ -5,6 +5,8 @@ import { useContextSelector } from "use-context-selector"
 import { UserPreferences } from "src/contexts/UserContext"
 import { parseCookies } from "nookies"
 import { Link as ReactLink } from "react-router-dom"
+import { useState } from "react"
+import LoginModal from "../organisms/LoginModal"
 
 type GalleryCardProps = Omit<book, "id" | "author" | "likedBy" | "publishedDate">
 
@@ -14,6 +16,7 @@ export default function GalleryCard({
   description,
   slug
 }: GalleryCardProps) {
+  const [open, setOpen] = useState(false)
   const { user } = useContextSelector(UserPreferences, (ctx) => {
     return {
       user: ctx.user
@@ -56,9 +59,12 @@ export default function GalleryCard({
             onClick={(e: Event) => {
               e.preventDefault()
 
+              if (!user) setOpen(true)
+
               handleLike()
             }}
           />
+          {open && <LoginModal setOpen={setOpen} />}
         </ContentContainer>
       </Content>
     </Container>

@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom"
 import { parseCookies } from "nookies"
 import { useContextSelector } from "use-context-selector"
 import { UserPreferences } from "src/contexts/UserContext"
+import Token from "src/utils/token"
 
 export default function CreateBook() {
   const navigate = useNavigate()
@@ -18,6 +19,8 @@ export default function CreateBook() {
     const form = document.getElementById("form") as HTMLFormElement
     const newData = new FormData(form)
     newData.append("email", user ? user.email : "")
+
+    await Token()
 
     const res = await fetch("http://localhost:8000/book/create", {
       method: "POST",

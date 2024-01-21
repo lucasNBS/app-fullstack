@@ -2,13 +2,26 @@ import styled from "styled-components"
 import SwiperItem from "src/components/atoms/SwiperItem"
 import { Swiper, SwiperSlide } from "swiper/react"
 import { FreeMode } from "swiper/modules"
+import { useEffect, useState } from "react"
+import { book } from "src/types/books"
 
 type SwiperProps = {
-  itemsList: any[]
   title?: string
 }
 
-export default function BooksSwiper({ itemsList, title }: SwiperProps) {
+export default function BooksSwiper({ title }: SwiperProps) {
+  const [itemsList, setItemsList] = useState<book[]>([])
+
+  useEffect(() => {
+    const getData = async () => {
+      const res = await fetch("http://localhost:8000/book/most-liked").then(res => res.json())
+
+      setItemsList(res)
+    }
+
+    getData()
+  }, [])
+
   return (
     <Container>
       {title && <Title>{title}</Title>}
@@ -21,10 +34,10 @@ export default function BooksSwiper({ itemsList, title }: SwiperProps) {
         spaceBetween={5}
         slidesPerView="auto"
       >
-        {itemsList.map((_, index) => {
+        {itemsList.map((item, index) => {
           return (
             <SwiperSlide key={index} >
-              <SwiperItem />
+              <SwiperItem item={item} />
             </SwiperSlide>
           )
         })}

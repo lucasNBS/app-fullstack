@@ -6,6 +6,9 @@ import { useNavigate, useParams } from "react-router-dom"
 import { parseCookies } from "nookies"
 import { useContextSelector } from "use-context-selector"
 import { UserPreferences } from "src/contexts/UserContext"
+import LoginModal from "src/components/organisms/LoginModal"
+import Token from "src/utils/token"
+import useUserFetch from "src/hooks/useUserFetch"
 
 function formatDate(date: string) {
   const newDateFormart = date.split("-")
@@ -19,7 +22,9 @@ function formatDate(date: string) {
 }
 
 export default function Book() {
+  useUserFetch()
   const [book, setBook] = useState<book>({} as book)
+  const [open, setOpen] = useState(false)
   const { slug } = useParams()
   const navigate = useNavigate()
   const { user } = useContextSelector(UserPreferences, (ctx) => {
@@ -38,17 +43,21 @@ export default function Book() {
   }, [])
 
   async function handleDelete(slug: string) {
-    const token = parseCookies()["AccessToken"]
     const answer = confirm("Você deseja excluir o livro?")
+    const form = new FormData()
+    form.append("email", user ? JSON.stringify(user.email) : "")
 
     if (answer) {
+      await Token()
+
+      const token = parseCookies()["AccessToken"]
+
       const res = await fetch(`http://localhost:8000/book/delete/${slug}`, {
         method: "DELETE",
         headers: {
-          "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`,
         },
-        body: JSON.stringify(user)
+        body: form
       })
       if (res.status === 200 || res.status === 204) {
         navigate("/")
@@ -57,6 +66,8 @@ export default function Book() {
   }
 
   async function handleLike(slug: string) {
+    await Token()
+
     const token = parseCookies()["AccessToken"]
 
     const res = await fetch(`http://localhost:8000/book/like/${slug}`, {
@@ -116,9 +127,14 @@ export default function Book() {
               padding="1rem 1rem"
               background="red"
               color="white"
-              onClick={() => handleLike(book.slug)}
+              onClick={() => {
+                if (!user) setOpen(true)
+
+                handleLike(book.slug)
+              }}
             />
           </ButtonsContainer>
+          {open && <LoginModal setOpen={setOpen} />}
         </DivContainer>
       </FlexContainer>
     </Container>

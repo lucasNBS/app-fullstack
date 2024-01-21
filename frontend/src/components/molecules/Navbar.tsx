@@ -1,5 +1,9 @@
 import styled from "styled-components"
 import { Link as ReactLink } from "react-router-dom"
+import { useState } from "react"
+import LoginModal from "../organisms/LoginModal"
+import { useContextSelector } from "use-context-selector"
+import { UserPreferences } from "src/contexts/UserContext"
 
 type NavBarProps = {
   classNameContainer?: string
@@ -7,6 +11,19 @@ type NavBarProps = {
 }
 
 export default function Navbar({ classNameContainer, classNameList }: NavBarProps) {
+  const [open, setOpen] = useState(false)
+  const { user } = useContextSelector(UserPreferences, (ctx) => {
+    return {
+      user: ctx.user,
+    }
+  })
+
+  function handleLink(link: string, name: string) {
+    return user ?
+      <Link to={link}>{name}</Link> :
+      <EmptyLink onClick={() => setOpen(true)}>{name}</EmptyLink>
+  }
+
   return (
     <Container className={classNameContainer}>
       <NavbarList className={classNameList}>
@@ -14,12 +31,13 @@ export default function Navbar({ classNameContainer, classNameList }: NavBarProp
           <Link to={"/"}>Home</Link>
         </ListItem>
         <ListItem>
-          <Link to={"/new-book"}>New Book</Link>
+          {handleLink("/new-book", "New Book")}
         </ListItem>
         <ListItem>
-          <Link to={"/my-books"}>My Books</Link>
+          {handleLink("/my-books", "My Books")}
         </ListItem>
       </NavbarList>
+      {open && <LoginModal setOpen={setOpen} />}
     </Container>
   )
 }
@@ -52,6 +70,11 @@ const NavbarList = styled.ul`
 const ListItem = styled.li``
 
 const Link = styled(ReactLink)`
+  text-decoration: none;
+  color: white;
+`
+const EmptyLink = styled.span`
+  cursor: pointer;
   text-decoration: none;
   color: white;
 `

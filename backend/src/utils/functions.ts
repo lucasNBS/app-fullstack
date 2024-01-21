@@ -24,7 +24,7 @@ export function isAuthor() {
       const { slug } = req.params
 
       const book = await bookModel.findOne({ slug })
-      const user = await userModel.findOne({ email })
+      const user = await userModel.findOne({ email: JSON.parse(email) })
 
       if (!book || !user) return res.sendStatus(404)
 

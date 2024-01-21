@@ -4,6 +4,7 @@ import LogoIcon from "public/assets/icons/Logo.svg"
 import FormRegister from "../molecules/FormRegister"
 import FormLogin from "../molecules/FormLogin"
 import iconClose from "public/assets/icons/iconClose.svg"
+import { createPortal } from "react-dom"
 
 type LoginModalProps = {
   setOpen: Dispatch<SetStateAction<boolean>>
@@ -14,7 +15,10 @@ type FormType = "register" | "login"
 export default function LoginModal({ setOpen }: LoginModalProps) {
   const [formSelected, setFormSelected] = useState<FormType>("register")
 
-  return (
+  if (typeof document === "undefined") return
+  const root = document.getElementById('root') as HTMLElement
+
+  return createPortal(
     <Background onClick={() => setOpen(pre => !pre)}>
       <Container onClick={(e) => e.stopPropagation()}>
         <CloseModal onClick={() => setOpen(false)} />
@@ -37,7 +41,8 @@ export default function LoginModal({ setOpen }: LoginModalProps) {
         </FormSelectorContainer>
         {formSelected === "register" ? <FormRegister /> : <FormLogin />}
       </Container>
-    </Background>
+    </Background>,
+    root
   )
 }
 

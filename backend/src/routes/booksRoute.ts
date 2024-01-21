@@ -32,6 +32,14 @@ router.get("/all", async (req: Request, res: Response) => {
   res.send(JSON.stringify(objectToSend))
 })
 
+router.get("/most-liked", async (req: Request, res: Response) => {
+  const books = await bookModel.find()
+
+  books.sort((book1, book2) => book2.likedBy.length - book1.likedBy.length)
+
+  res.send(JSON.stringify(books.slice(0, 15)))
+})
+
 // Create book
 router.post("/create", authenticateToken, upload.single("coverImage"), async (req: Request, res: Response) => {
   const { title, description, publishedDate, author, email } = req.body
@@ -70,7 +78,7 @@ router.post("/create", authenticateToken, upload.single("coverImage"), async (re
 })
 
 // Update book
-router.put("/edit/:slug", isAuthor(), upload.single("coverImage"), async (req: Request, res: Response) => {
+router.put("/edit/:slug", upload.single("coverImage"), isAuthor(), async (req: Request, res: Response) => {
   const { slug } = req.params
   const { title, description, publishedDate, author } = req.body
   const coverImage = req.file?.originalname
