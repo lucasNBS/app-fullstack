@@ -113,7 +113,7 @@ router.put("/edit/:slug", upload.single("coverImage"), isAuthor(), async (req: R
 })
 
 // Delete book
-router.delete("/delete/:slug", isAuthor(), async (req: Request, res: Response) => {
+router.delete("/delete/:slug", upload.none(), isAuthor(), async (req: Request, res: Response) => {
   const { slug } = req.params
 
   try {

@@ -45,7 +45,7 @@ export default function Book() {
   async function handleDelete(slug: string) {
     const answer = confirm("Você deseja excluir o livro?")
     const form = new FormData()
-    form.append("email", user ? JSON.stringify(user.email) : "")
+    form.append("email", user ? JSON.stringify(user.email) : "{}")
 
     if (answer) {
       await Token()
@@ -57,7 +57,7 @@ export default function Book() {
         headers: {
           "Authorization": `Bearer ${token}`,
         },
-        body: form
+        body: form,
       })
       if (res.status === 200 || res.status === 204) {
         navigate("/")
@@ -101,7 +101,7 @@ export default function Book() {
         <DivContainer width="60" justifycontent="space-between">
           <p>{book.description}</p>
           <ButtonsContainer>
-            {user && (
+            {user?.email == book.postedBy?.email && (
               <>
                 <Button
                   value="Editar"

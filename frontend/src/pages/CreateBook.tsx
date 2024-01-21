@@ -15,12 +15,13 @@ export default function CreateBook() {
   })
 
   async function submit() {
-    const token = parseCookies()["AccessToken"]
     const form = document.getElementById("form") as HTMLFormElement
     const newData = new FormData(form)
     newData.append("email", user ? user.email : "")
 
     await Token()
+
+    const token = parseCookies()["AccessToken"]
 
     const res = await fetch("http://localhost:8000/book/create", {
       method: "POST",
