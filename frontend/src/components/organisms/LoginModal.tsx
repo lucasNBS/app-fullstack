@@ -58,7 +58,7 @@ const Background = styled.div`
 
 const Container = styled.div`
   position: relative;
-  background-color: #fff;
+  background-color: ${({ theme }) => theme.colors.background};
   padding: 2rem;
   display: flex;
   flex-direction: column;
@@ -77,11 +77,13 @@ const CloseModal = styled.span`
   width: 1rem;
   height: 1rem;
   background: url(${iconClose}) no-repeat center;
+  filter: ${({ theme }) => theme.title === "dark" && "brightness(0) invert(1)"};
 `
 
 const Image = styled.img`
   width: 100px;
   height: 100px;
+  filter: ${({ theme }) => theme.title === "dark" && "brightness(0) invert(1)"};
 `
 
 const FormSelectorContainer = styled.div<{ selected: FormType }>`
@@ -99,7 +101,7 @@ const FormSelectorContainer = styled.div<{ selected: FormType }>`
     width: ${({ selected }) => selected === "register" ? "126px" : "100px"};
     height: 48px;
     border-radius: 32px;
-    transform: ${({ selected }) => selected === "register" ? "translate(0)" : "translate(126px)"};
+    transform: ${({ selected }) => selected === "register" ? "translate(-1px)" : "translate(126px)"};
     transition: all 300ms;
   }
 `

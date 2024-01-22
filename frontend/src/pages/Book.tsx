@@ -153,7 +153,9 @@ const Container = styled.section`
   gap: 2rem;
 `
 
-const Title = styled.h2``
+const Title = styled.h2`
+  color: ${({ theme }) => theme.colors.font};
+`
 
 const FlexContainer = styled.div`
   width: 100%;
@@ -177,6 +179,7 @@ const DivContainer = styled.div<{ width?: string, justifycontent?: string }>`
   gap: 1rem;
 
   p {
+    color: ${({ theme }) => theme.colors.font};
     min-height: 700.8px;
   }
 
@@ -212,4 +215,8 @@ const InfoContainer = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
+
+  span {
+    color: ${({ theme }) => theme.colors.font};
+  }
 `

@@ -71,5 +71,5 @@ const Container = styled.div`
 `
 
 const Title = styled.h3`
-  color: black;
+  color: ${({ theme }) => theme.colors.font};
 `

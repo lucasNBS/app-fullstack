@@ -78,9 +78,13 @@ const FormGroup = styled.div`
   gap: 0.25rem;
 `
 
-const FormLabel = styled.label``
+const FormLabel = styled.label`
+  color: ${({ theme }) => theme.colors.font};
+`
 
 const FormInput = styled.input`
+  background-color: transparent;
+  color: ${({ theme }) => theme.colors.font};
   padding: 0.5rem 1rem;
   border-radius: 2px;
   border: 1px solid #687075;

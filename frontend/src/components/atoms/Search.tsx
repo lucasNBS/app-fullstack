@@ -35,6 +35,8 @@ const Container = styled.form`
 `
 
 const SearchBar = styled.input`
+  background-color: transparent;
+  color: ${({ theme }) => theme.colors.font};
   width: 300px;
   height: 32px;
   padding: 0.5rem 1rem;

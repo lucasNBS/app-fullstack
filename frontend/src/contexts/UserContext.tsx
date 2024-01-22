@@ -11,6 +11,8 @@ type ThemeType = {
     blue300: string
     blue500: string
     blue800: string
+    background: string
+    font: string
   }
 }
 
@@ -20,7 +22,9 @@ const lightTheme: ThemeType = {
     blue100: "#D9F0FF",
     blue300: "#A3D5FF",
     blue500: "#83C9F4",
-    blue800: "#6F73D2"
+    blue800: "#6F73D2",
+    background: "#fff",
+    font: "#353a3d",
   }
 }
 
@@ -30,7 +34,9 @@ const darkTheme: ThemeType = {
     blue100: "#70C6FF",
     blue300: "#33A3FF",
     blue500: "#1E9DEB",
-    blue800: "#31349B"
+    blue800: "#31349B",
+    background: "#333",
+    font: "#fff",
   }
 }
 

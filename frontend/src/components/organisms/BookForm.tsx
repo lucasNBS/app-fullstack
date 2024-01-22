@@ -172,11 +172,14 @@ const FormGroup = styled.div`
 `
 
 const FormLabel = styled.label`
+  color: ${({ theme }) => theme.colors.font};
   font-size: 1.25rem;
   text-style: uppercase;
 `
 
 const FormInput = styled.input`
+  background-color: transparent;
+  color: ${({ theme }) => theme.colors.font};
   width: 100%;
   padding: 0.5rem 1rem;
   border-radius: 2px;
@@ -193,6 +196,8 @@ const FormInput = styled.input`
 `
 
 const FormTextarea = styled.textarea`
+  background-color: transparent;
+  color: ${({ theme }) => theme.colors.font};
   width: 100%;
   height: 300px;
   padding: 0.5rem 1rem;

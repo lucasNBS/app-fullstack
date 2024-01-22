@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form"
 import { parseCookies } from "nookies"
 
 type GalleryProps = {
-  myBooks: boolean
+  myBooks?: boolean
 }
 
 export default function Gallery({ myBooks }: GalleryProps) {
