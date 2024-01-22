@@ -5,8 +5,13 @@ import { book } from "src/types/books"
 import Pagination from "./Pagination"
 import Search from "../atoms/Search"
 import { useForm } from "react-hook-form"
+import { parseCookies } from "nookies"
 
-export default function Gallery() {
+type GalleryProps = {
+  myBooks: boolean
+}
+
+export default function Gallery({ myBooks }: GalleryProps) {
   const [list, setList] = useState<book[]>([])
   const [page, setPage] = useState(1)
   const [hasMore, setHasMore] = useState(true)
@@ -16,7 +21,13 @@ export default function Gallery() {
   const lastBookIndex = page * 20
 
   async function getData() {
-    const books = await fetch("http://localhost:8000/book/all?page=1").then(res => res.json())
+    const token = parseCookies()["AccessToken"]
+
+    const books = await fetch(`http://localhost:8000/book/${myBooks ? "my-books" : "all"}?page=1`, {
+      headers: {
+        "Authorization": `Bearer ${token}`
+      }
+    }).then(res => res.json())
     setList(books.results)
     setHasMore(books.next ? true : false)
   }
@@ -25,13 +36,13 @@ export default function Gallery() {
     setPage(pre => pre + 1)
     if (lastBookIndex < list.length) return
 
-    const books = await fetch(`http://localhost:8000/book/all?page=${page + 1}&search=${getValues("search")}`).then(res => res.json())
+    const books = await fetch(`http://localhost:8000/book/${myBooks ? "my-books" : "all"}?page=${page + 1}&search=${getValues("search")}`).then(res => res.json())
     setList(pre => [...pre, ...books.results])
     setHasMore(books.next ? true : false)
   }
 
   async function handleSearch() {
-    const books = await fetch(`http://localhost:8000/book/all?page=1&search=${getValues("search")}`)
+    const books = await fetch(`http://localhost:8000/book/${myBooks ? "my-books" : "all"}?page=1&search=${getValues("search")}`)
       .then(res => res.json())
     setPage(1)
     setList(books.results)

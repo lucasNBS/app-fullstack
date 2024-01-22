@@ -12,6 +12,7 @@ export function authenticateToken(req: Request, res: Response, next: NextFunctio
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET as string, (err, user) => {
     if (err) return res.sendStatus(403)
 
+    res.locals.user = user
     next()
   })
 }

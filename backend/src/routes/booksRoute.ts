@@ -37,6 +37,39 @@ router.get("/all", async (req: Request, res: Response) => {
   res.send(JSON.stringify(objectToSend))
 })
 
+router.get("/my-books", authenticateToken, async (req: Request, res: Response) => {
+  const page = Number(req.query.page) ? Number(req.query.page) : 1
+  const { search } = req.query
+
+  const email = res.locals.user.email
+
+  const user = await userModel.findOne({ email })
+  let books = await bookModel.find()
+
+  if (user) {
+    books = books.filter(book => book.likedBy.includes(user._id))
+  }
+
+  if (search) {
+    books = books.filter(book => book.title.includes(search as string))
+  }
+
+  const pageBooks = books.slice((Number(page) - 1) * 20, Number(page) * 20)
+
+  const maxPageValue = Math.ceil(books.length / 20)
+
+  const prev = page > 1 ? `http://localhost:8000/book/all?page=${page - 1}` : null
+  const next = page < maxPageValue ? `http://localhost:8000/book/all?page=${page + 1}` : null
+
+  const objectToSend = {
+    prev: prev,
+    next: next,
+    results: pageBooks
+  }
+
+  res.send(JSON.stringify(objectToSend))
+})
+
 router.get("/most-liked", async (req: Request, res: Response) => {
   const books = await bookModel.find()
 
