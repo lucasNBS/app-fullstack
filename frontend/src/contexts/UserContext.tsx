@@ -57,7 +57,9 @@ type UserContextProps = {
 }
 
 export default function UserContext({ children }: UserContextProps) {
-  const cookieTheme: ThemeType | null = JSON.parse(parseCookies()["Theme"])
+  const themeCookie = parseCookies()["Theme"]
+  const cookieTheme: ThemeType | null =
+    typeof themeCookie === "string" ? JSON.parse(themeCookie) : null
 
   const [theme, setTheme] = useState(cookieTheme ? cookieTheme : lightTheme)
   const [user, setUser] = useState<User | null>(null)
